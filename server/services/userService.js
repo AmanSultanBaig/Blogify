@@ -1,4 +1,5 @@
 const userRepository = require("../repositories/userRepository");
+const { hashPassword, validateEmail } = require("../utils/utils");
 class userService {
   constructor(req) {
     this._req = req;
@@ -7,6 +8,15 @@ class userService {
 
   async addUser(payload) {
     try {
+      if (!payload.email || !payload.password) {
+        return { message: "Email and password are required", status: 400 };
+      }
+
+      if (!validateEmail(payload.email)) {
+        return { message: "Invalid Email", status: 400 };
+      }
+      const encryptPass = hashPassword(payload.password);
+      payload.password = encryptPass;
       return await this.userRepo.create(payload);
     } catch (error) {
       throw new Error(`Error adding user: ${error.message}`);
