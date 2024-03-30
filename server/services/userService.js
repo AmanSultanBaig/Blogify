@@ -20,6 +20,14 @@ class userService {
       if (!validateEmail(payload.email)) {
         return { message: "Invalid Email", status: 400 };
       }
+
+      const userExist = await this.userRepo.getSingleUser({
+        email: payload.email,
+      });
+
+      if (userExist) {
+        return { message: "User Already Exist!", status: 409 };
+      }
       const encryptPass = hashPassword(payload.password);
       payload.password = encryptPass;
       const createdUser = await this.userRepo.create(payload);
