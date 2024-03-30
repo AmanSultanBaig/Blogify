@@ -21,6 +21,14 @@ class userRepository {
       throw new Error(`Error fetching user: ${error.message}`);
     }
   }
+
+  async getSingleUser(filters) {
+    try {
+      return await this.User.findOne(filters);
+    } catch (error) {
+      throw new Error(`Error fetching user: ${error.message}`);
+    }
+  }
 }
 
 module.exports = userRepository;
